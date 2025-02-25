@@ -1,1 +1,0 @@
-# amnisphere-java-sdk
