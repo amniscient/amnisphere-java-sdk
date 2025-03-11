@@ -6,12 +6,12 @@ package com.amniscient.api.core;
 /**
  * This class serves as the base exception for all errors in the SDK.
  */
-public class AmniscientApiException extends RuntimeException {
-    public AmniscientApiException(String message) {
+public class AmniscientException extends RuntimeException {
+    public AmniscientException(String message) {
         super(message);
     }
 
-    public AmniscientApiException(String message, Exception e) {
+    public AmniscientException(String message, Exception e) {
         super(message, e);
     }
 }

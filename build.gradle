@@ -2,12 +2,14 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'com.diffplug.spotless' version '6.11.0'
+    id 'signing'
+    id 'cl.franciscosolis.sonatype-central-upload' version '1.0.3'
 }
 
 repositories {
     mavenCentral()
     maven {
-        url 'https://s01.oss.sonatype.org/content/repositories/releases/'
+        url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
     }
 }
 
@@ -42,6 +44,27 @@ java {
 }
 
 
+group = 'com.amniscient'
+
+version = '0.0.1'
+
+jar {
+    dependsOn(":generatePomFileForMavenPublication")
+    archiveBaseName = "amniscient-java-sdk"
+}
+
+sourcesJar {
+    archiveBaseName = "amniscient-java-sdk"
+}
+
+javadocJar {
+    archiveBaseName = "amniscient-java-sdk"
+}
+
+signing {
+    sign(publishing.publications)
+}
+
 test {
     useJUnitPlatform()
     testLogging {
@@ -49,3 +72,59 @@ test {
     }
 }
 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.amniscient'
+            artifactId = 'amniscient-java-sdk'
+            version = '0.0.1'
+            from components.java
+            pom {
+                name = 'amniscient'
+                description = 'The official SDK of amniscient'
+                url = 'https://buildwithfern.com'
+                licenses {
+                    license {
+                        name = 'The MIT License (MIT)'
+                        url = 'https://mit-license.org/'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'amniscient'
+                        email = 'developers@amniscient.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/amniscient/amnisphere-java-sdk.git'
+                    developerConnection = 'scm:git:git://github.com/amniscient/amnisphere-java-sdk.git'
+                    url = 'https://github.com/amniscient/amnisphere-java-sdk'
+                }
+            }
+        }
+    }
+}
+
+sonatypeCentralUpload {
+    username = "$System.env.MAVEN_USERNAME"
+    password = "$System.env.MAVEN_PASSWORD"
+
+    archives = files(
+        "$buildDir/libs/amniscient-java-sdk-" + version + ".jar",
+        "$buildDir/libs/amniscient-java-sdk-" + version + "-sources.jar",
+        "$buildDir/libs/amniscient-java-sdk-" + version + "-javadoc.jar"
+    )
+
+    pom = file("$buildDir/publications/maven/pom-default.xml")
+    signingKey = "$System.env.MAVEN_SIGNATURE_SECRET_KEY"
+    signingKeyPassphrase = "$System.env.MAVEN_SIGNATURE_PASSWORD"
+}
+
+signing {
+    def signingKeyId = "$System.env.MAVEN_SIGNATURE_SECRET_KEY"
+    def signingPassword = "$System.env.MAVEN_SIGNATURE_PASSWORD"
+    useInMemoryPgpKeys(signingKeyId, signingPassword)
+    sign publishing.publications.maven
+}
+
+sonatypeCentralUpload.dependsOn build

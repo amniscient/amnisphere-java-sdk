@@ -1,1 +1,3 @@
+rootProject.name = 'amniscient-java-sdk'
+
 include 'sample-app'

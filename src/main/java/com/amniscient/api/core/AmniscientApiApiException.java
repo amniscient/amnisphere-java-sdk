@@ -6,7 +6,7 @@ package com.amniscient.api.core;
 /**
  * This exception type will be thrown for any non-2XX API responses.
  */
-public class AmniscientApiApiException extends AmniscientApiException {
+public class AmniscientApiApiException extends AmniscientException {
     /**
      * The error code of the response that triggered the exception.
      */
