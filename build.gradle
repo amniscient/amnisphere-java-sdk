@@ -50,15 +50,15 @@ version = '0.0.1'
 
 jar {
     dependsOn(":generatePomFileForMavenPublication")
-    archiveBaseName = "amniscient-java-sdk"
+    archiveBaseName = "amniscient-java"
 }
 
 sourcesJar {
-    archiveBaseName = "amniscient-java-sdk"
+    archiveBaseName = "amniscient-java"
 }
 
 javadocJar {
-    archiveBaseName = "amniscient-java-sdk"
+    archiveBaseName = "amniscient-java"
 }
 
 signing {
@@ -76,7 +76,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'com.amniscient'
-            artifactId = 'amniscient-java-sdk'
+            artifactId = 'amniscient-java'
             version = '0.0.1'
             from components.java
             pom {
@@ -110,9 +110,9 @@ sonatypeCentralUpload {
     password = "$System.env.MAVEN_PASSWORD"
 
     archives = files(
-        "$buildDir/libs/amniscient-java-sdk-" + version + ".jar",
-        "$buildDir/libs/amniscient-java-sdk-" + version + "-sources.jar",
-        "$buildDir/libs/amniscient-java-sdk-" + version + "-javadoc.jar"
+        "$buildDir/libs/amniscient-java-" + version + ".jar",
+        "$buildDir/libs/amniscient-java-" + version + "-sources.jar",
+        "$buildDir/libs/amniscient-java-" + version + "-javadoc.jar"
     )
 
     pom = file("$buildDir/publications/maven/pom-default.xml")
