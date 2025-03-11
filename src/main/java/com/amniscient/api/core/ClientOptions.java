@@ -31,10 +31,10 @@ public final class ClientOptions {
         this.headers.putAll(headers);
         this.headers.putAll(new HashMap<String, String>() {
             {
-                put("User-Agent", "com.amniscient:amniscient-java-sdk/0.0.2");
+                put("User-Agent", "com.amniscient:amniscient-java-sdk/0.0.3");
                 put("X-Fern-Language", "JAVA");
                 put("X-Fern-SDK-Name", "com.amniscient.fern:api-sdk");
-                put("X-Fern-SDK-Version", "0.0.2");
+                put("X-Fern-SDK-Version", "0.0.3");
             }
         });
         this.headerSuppliers = headerSuppliers;
