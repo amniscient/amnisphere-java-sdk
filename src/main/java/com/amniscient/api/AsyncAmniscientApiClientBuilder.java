@@ -7,7 +7,7 @@ import com.amniscient.api.core.ClientOptions;
 import com.amniscient.api.core.Environment;
 import okhttp3.OkHttpClient;
 
-public final class AmniscientApiClientBuilder {
+public final class AsyncAmniscientApiClientBuilder {
     private ClientOptions.Builder clientOptionsBuilder = ClientOptions.builder();
 
     private String apiKey = null;
@@ -17,17 +17,17 @@ public final class AmniscientApiClientBuilder {
     /**
      * Sets apiKey
      */
-    public AmniscientApiClientBuilder apiKey(String apiKey) {
+    public AsyncAmniscientApiClientBuilder apiKey(String apiKey) {
         this.apiKey = apiKey;
         return this;
     }
 
-    public AmniscientApiClientBuilder environment(Environment environment) {
+    public AsyncAmniscientApiClientBuilder environment(Environment environment) {
         this.environment = environment;
         return this;
     }
 
-    public AmniscientApiClientBuilder url(String url) {
+    public AsyncAmniscientApiClientBuilder url(String url) {
         this.environment = Environment.custom(url);
         return this;
     }
@@ -35,7 +35,7 @@ public final class AmniscientApiClientBuilder {
     /**
      * Sets the timeout (in seconds) for the client. Defaults to 60 seconds.
      */
-    public AmniscientApiClientBuilder timeout(int timeout) {
+    public AsyncAmniscientApiClientBuilder timeout(int timeout) {
         this.clientOptionsBuilder.timeout(timeout);
         return this;
     }
@@ -43,7 +43,7 @@ public final class AmniscientApiClientBuilder {
     /**
      * Sets the maximum number of retries for the client. Defaults to 2 retries.
      */
-    public AmniscientApiClientBuilder maxRetries(int maxRetries) {
+    public AsyncAmniscientApiClientBuilder maxRetries(int maxRetries) {
         this.clientOptionsBuilder.maxRetries(maxRetries);
         return this;
     }
@@ -51,17 +51,17 @@ public final class AmniscientApiClientBuilder {
     /**
      * Sets the underlying OkHttp client
      */
-    public AmniscientApiClientBuilder httpClient(OkHttpClient httpClient) {
+    public AsyncAmniscientApiClientBuilder httpClient(OkHttpClient httpClient) {
         this.clientOptionsBuilder.httpClient(httpClient);
         return this;
     }
 
-    public AmniscientApiClient build() {
+    public AsyncAmniscientApiClient build() {
         if (apiKey == null) {
             throw new RuntimeException("Please provide apiKey");
         }
         this.clientOptionsBuilder.addHeader("x-api-key", this.apiKey);
         clientOptionsBuilder.environment(this.environment);
-        return new AmniscientApiClient(clientOptionsBuilder.build());
+        return new AsyncAmniscientApiClient(clientOptionsBuilder.build());
     }
 }

@@ -5,6 +5,7 @@ package com.amniscient.api.errors;
 
 import com.amniscient.api.core.AmniscientApiApiException;
 import com.amniscient.api.types.UnauthorizedErrorBody;
+import okhttp3.Response;
 
 public final class UnauthorizedError extends AmniscientApiApiException {
     /**
@@ -14,6 +15,11 @@ public final class UnauthorizedError extends AmniscientApiApiException {
 
     public UnauthorizedError(UnauthorizedErrorBody body) {
         super("UnauthorizedError", 401, body);
+        this.body = body;
+    }
+
+    public UnauthorizedError(UnauthorizedErrorBody body, Response rawResponse) {
+        super("UnauthorizedError", 401, body, rawResponse);
         this.body = body;
     }
 
