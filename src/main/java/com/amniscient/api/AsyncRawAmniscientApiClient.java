@@ -15,15 +15,19 @@ import com.amniscient.api.errors.UnauthorizedError;
 import com.amniscient.api.requests.DetectRequest;
 import com.amniscient.api.requests.LoadModelRequest;
 import com.amniscient.api.types.DetectResponse;
-import com.amniscient.api.types.LoadModelResponse;
 import com.amniscient.api.types.UnauthorizedErrorBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -42,7 +46,7 @@ public class AsyncRawAmniscientApiClient {
     /**
      * Initializes a model for inference. This endpoint must be called before running any detections.
      */
-    public CompletableFuture<AmniscientApiHttpResponse<LoadModelResponse>> loadModel(
+    public CompletableFuture<AmniscientApiHttpResponse<List<String>>> loadModel(
             String modelId, LoadModelRequest request) {
         return loadModel(modelId, request, null);
     }
@@ -50,11 +54,11 @@ public class AsyncRawAmniscientApiClient {
     /**
      * Initializes a model for inference. This endpoint must be called before running any detections.
      */
-    public CompletableFuture<AmniscientApiHttpResponse<LoadModelResponse>> loadModel(
+    public CompletableFuture<AmniscientApiHttpResponse<List<String>>> loadModel(
             String modelId, LoadModelRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("loadModel")
+                .addPathSegments("load-model")
                 .addPathSegment(modelId)
                 .build();
         RequestBody body;
@@ -75,14 +79,15 @@ public class AsyncRawAmniscientApiClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<AmniscientApiHttpResponse<LoadModelResponse>> future = new CompletableFuture<>();
+        CompletableFuture<AmniscientApiHttpResponse<List<String>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
                     if (response.isSuccessful()) {
                         future.complete(new AmniscientApiHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), LoadModelResponse.class),
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBody.string(), new TypeReference<List<String>>() {}),
                                 response));
                         return;
                     }
@@ -126,15 +131,15 @@ public class AsyncRawAmniscientApiClient {
     /**
      * Detects an object within an uploaded image file. Make sure to load the model you're using for detection first!
      */
-    public CompletableFuture<AmniscientApiHttpResponse<DetectResponse>> detect(DetectRequest request) {
-        return detect(request, null);
+    public CompletableFuture<AmniscientApiHttpResponse<DetectResponse>> detect(File file, DetectRequest request) {
+        return detect(file, request, null);
     }
 
     /**
      * Detects an object within an uploaded image file. Make sure to load the model you're using for detection first!
      */
     public CompletableFuture<AmniscientApiHttpResponse<DetectResponse>> detect(
-            DetectRequest request, RequestOptions requestOptions) {
+            File file, DetectRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("detect")
@@ -143,7 +148,9 @@ public class AsyncRawAmniscientApiClient {
         try {
             body.addFormDataPart(
                     "organization_id", ObjectMappers.JSON_MAPPER.writeValueAsString(request.getOrganizationId()));
-            body.addFormDataPart("file", ObjectMappers.JSON_MAPPER.writeValueAsString(request.getFile()));
+            String fileMimeType = Files.probeContentType(file.toPath());
+            MediaType fileMimeTypeMediaType = fileMimeType != null ? MediaType.parse(fileMimeType) : null;
+            body.addFormDataPart("file", file.getName(), RequestBody.create(file, fileMimeTypeMediaType));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

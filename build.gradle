@@ -46,7 +46,7 @@ java {
 
 group = 'com.amniscient'
 
-version = '0.0.2'
+version = '0.0.3'
 
 jar {
     dependsOn(":generatePomFileForMavenPublication")
@@ -77,7 +77,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.amniscient'
             artifactId = 'amniscient-java'
-            version = '0.0.2'
+            version = '0.0.3'
             from components.java
             pom {
                 name = 'amniscient'

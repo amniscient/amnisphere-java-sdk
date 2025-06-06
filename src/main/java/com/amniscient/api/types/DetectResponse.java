@@ -96,6 +96,9 @@ public final class DetectResponse {
             return this;
         }
 
+        /**
+         * <p>A status code denoting success or failure.</p>
+         */
         @JsonSetter(value = "status", nulls = Nulls.SKIP)
         public Builder status(Optional<String> status) {
             this.status = status;
@@ -107,6 +110,9 @@ public final class DetectResponse {
             return this;
         }
 
+        /**
+         * <p>The detections response includes 3 elements: the bbox array, a confidence value, and a class. The bbox array is an array of numbers describing the bounding box coordinates for your objects listed in order as [x1, y1, x2, y2]. The confidence score is a value between 0 and 1 rating how confident the object detection output is based on your model and the image provided. The class is the class name of the detected object.</p>
+         */
         @JsonSetter(value = "detections", nulls = Nulls.SKIP)
         public Builder detections(Optional<List<Object>> detections) {
             this.detections = detections;

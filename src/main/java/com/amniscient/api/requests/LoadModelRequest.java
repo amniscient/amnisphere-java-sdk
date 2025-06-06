@@ -66,6 +66,9 @@ public final class LoadModelRequest {
     }
 
     public interface OrganizationIdStage {
+        /**
+         * Your organization identifier
+         */
         _FinalStage organizationId(@NotNull String organizationId);
 
         Builder from(LoadModelRequest other);
@@ -91,7 +94,7 @@ public final class LoadModelRequest {
         }
 
         /**
-         * <p>Your organization identifier</p>
+         * Your organization identifier<p>Your organization identifier</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

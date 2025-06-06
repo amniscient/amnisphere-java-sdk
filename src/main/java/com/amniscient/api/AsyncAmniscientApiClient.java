@@ -8,7 +8,8 @@ import com.amniscient.api.core.RequestOptions;
 import com.amniscient.api.requests.DetectRequest;
 import com.amniscient.api.requests.LoadModelRequest;
 import com.amniscient.api.types.DetectResponse;
-import com.amniscient.api.types.LoadModelResponse;
+import java.io.File;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncAmniscientApiClient {
@@ -31,14 +32,14 @@ public class AsyncAmniscientApiClient {
     /**
      * Initializes a model for inference. This endpoint must be called before running any detections.
      */
-    public CompletableFuture<LoadModelResponse> loadModel(String modelId, LoadModelRequest request) {
+    public CompletableFuture<List<String>> loadModel(String modelId, LoadModelRequest request) {
         return this.rawClient.loadModel(modelId, request).thenApply(response -> response.body());
     }
 
     /**
      * Initializes a model for inference. This endpoint must be called before running any detections.
      */
-    public CompletableFuture<LoadModelResponse> loadModel(
+    public CompletableFuture<List<String>> loadModel(
             String modelId, LoadModelRequest request, RequestOptions requestOptions) {
         return this.rawClient.loadModel(modelId, request, requestOptions).thenApply(response -> response.body());
     }
@@ -46,15 +47,15 @@ public class AsyncAmniscientApiClient {
     /**
      * Detects an object within an uploaded image file. Make sure to load the model you're using for detection first!
      */
-    public CompletableFuture<DetectResponse> detect(DetectRequest request) {
-        return this.rawClient.detect(request).thenApply(response -> response.body());
+    public CompletableFuture<DetectResponse> detect(File file, DetectRequest request) {
+        return this.rawClient.detect(file, request).thenApply(response -> response.body());
     }
 
     /**
      * Detects an object within an uploaded image file. Make sure to load the model you're using for detection first!
      */
-    public CompletableFuture<DetectResponse> detect(DetectRequest request, RequestOptions requestOptions) {
-        return this.rawClient.detect(request, requestOptions).thenApply(response -> response.body());
+    public CompletableFuture<DetectResponse> detect(File file, DetectRequest request, RequestOptions requestOptions) {
+        return this.rawClient.detect(file, request, requestOptions).thenApply(response -> response.body());
     }
 
     public static AsyncAmniscientApiClientBuilder builder() {

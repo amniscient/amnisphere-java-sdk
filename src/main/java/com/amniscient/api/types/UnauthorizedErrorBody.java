@@ -95,6 +95,9 @@ public final class UnauthorizedErrorBody {
             return this;
         }
 
+        /**
+         * <p>A status code denoting success or failure.</p>
+         */
         @JsonSetter(value = "status", nulls = Nulls.SKIP)
         public Builder status(Optional<String> status) {
             this.status = status;
@@ -106,6 +109,9 @@ public final class UnauthorizedErrorBody {
             return this;
         }
 
+        /**
+         * <p>A message describing your error.</p>
+         */
         @JsonSetter(value = "message", nulls = Nulls.SKIP)
         public Builder message(Optional<String> message) {
             this.message = message;

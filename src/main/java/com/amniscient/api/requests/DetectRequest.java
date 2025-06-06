@@ -21,13 +21,10 @@ import org.jetbrains.annotations.NotNull;
 public final class DetectRequest {
     private final String organizationId;
 
-    private final Object file;
-
     private final Map<String, Object> additionalProperties;
 
-    private DetectRequest(String organizationId, Object file, Map<String, Object> additionalProperties) {
+    private DetectRequest(String organizationId, Map<String, Object> additionalProperties) {
         this.organizationId = organizationId;
-        this.file = file;
         this.additionalProperties = additionalProperties;
     }
 
@@ -37,11 +34,6 @@ public final class DetectRequest {
     @JsonProperty("organization_id")
     public String getOrganizationId() {
         return organizationId;
-    }
-
-    @JsonProperty("file")
-    public Object getFile() {
-        return file;
     }
 
     @java.lang.Override
@@ -56,12 +48,12 @@ public final class DetectRequest {
     }
 
     private boolean equalTo(DetectRequest other) {
-        return organizationId.equals(other.organizationId) && file.equals(other.file);
+        return organizationId.equals(other.organizationId);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.organizationId, this.file);
+        return Objects.hash(this.organizationId);
     }
 
     @java.lang.Override
@@ -74,13 +66,12 @@ public final class DetectRequest {
     }
 
     public interface OrganizationIdStage {
-        FileStage organizationId(@NotNull String organizationId);
+        /**
+         * Your organization identifier
+         */
+        _FinalStage organizationId(@NotNull String organizationId);
 
         Builder from(DetectRequest other);
-    }
-
-    public interface FileStage {
-        _FinalStage file(Object file);
     }
 
     public interface _FinalStage {
@@ -88,10 +79,8 @@ public final class DetectRequest {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements OrganizationIdStage, FileStage, _FinalStage {
+    public static final class Builder implements OrganizationIdStage, _FinalStage {
         private String organizationId;
-
-        private Object file;
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -101,31 +90,23 @@ public final class DetectRequest {
         @java.lang.Override
         public Builder from(DetectRequest other) {
             organizationId(other.getOrganizationId());
-            file(other.getFile());
             return this;
         }
 
         /**
-         * <p>Your organization identifier</p>
+         * Your organization identifier<p>Your organization identifier</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("organization_id")
-        public FileStage organizationId(@NotNull String organizationId) {
+        public _FinalStage organizationId(@NotNull String organizationId) {
             this.organizationId = Objects.requireNonNull(organizationId, "organizationId must not be null");
             return this;
         }
 
         @java.lang.Override
-        @JsonSetter("file")
-        public _FinalStage file(Object file) {
-            this.file = file;
-            return this;
-        }
-
-        @java.lang.Override
         public DetectRequest build() {
-            return new DetectRequest(organizationId, file, additionalProperties);
+            return new DetectRequest(organizationId, additionalProperties);
         }
     }
 }
